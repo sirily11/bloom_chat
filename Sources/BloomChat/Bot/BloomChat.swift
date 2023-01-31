@@ -20,7 +20,7 @@ public class BloomChat {
     }
     
     func generateMessage(input: String, previous session: ChatSession?) async throws -> String {
-        let prompt = combineHistoryWithPrompt(previous: session?.history, userMessage: input)
+        let prompt = preparePromptForBot(previous: session?.history, userMessage: input)
         print("====\nPrompt: \(prompt)\n====")
         let body = ["inputs": prompt]
         var request = URLRequest(url: URL(string: endpoint)!)
@@ -53,7 +53,7 @@ public class BloomChat {
     
     func save(from user: User, prev session: ChatSession?, userMessage: String, response: String) async throws {
         let encoder = BSONEncoder()
-        let newHistory = combineHistory(previous: session?.history, response: response, userMessage: userMessage)
+        let newHistory = combineHistoryForDatabase(previous: session?.history, response: response, userMessage: userMessage)
         let data = ChatSession(user: user, history: newHistory)
         let document = try encoder.encode(data)
         if let session = session {
@@ -63,20 +63,30 @@ public class BloomChat {
         }
     }
     
-    private func combineHistoryWithPrompt(previous: String?, userMessage: String) -> String {
+    
+    /**
+     Prepare prompt for bot
+     */
+    private func preparePromptForBot(previous: String?, userMessage: String) -> String {
         if let previous = previous {
-            return "\(previous)\nUser:\(userMessage)\nBot: "
+            return "\(previous)\nUser: \(userMessage)\nBot: "
         } else {
             return "User: \(userMessage)\nBot: "
         }
     }
     
-    private func combineHistory(previous: String?, response: String, userMessage: String) -> String {
+    /**
+     Combine the history with user message, bot response
+     */
+    private func combineHistoryForDatabase(previous: String?, response: String, userMessage: String) -> String {
+        var history: String = ""
         if let previous = previous {
-            return "\(previous)\nUser: \(userMessage)\nBot: \(response)"
+            history =  "\(previous)\nUser: \(userMessage)\nBot: \(response)"
         } else {
-            return "\(prePrompt)\nUser:\(userMessage)\nBot:\(response)"
+            history =  "\(prePrompt)\nUser: \(userMessage)\nBot: \(response)"
         }
+        
+        return history.replacingOccurrences(of: prePrompt, with: "")
     }
     
     /**
