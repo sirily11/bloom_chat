@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Setup curl
-        run: sudo apt update && apt install libcurl-dev
+        run: sudo apt update && sudo apt install libcurl-dev
       - name: Test Swift Package
         run: swift test
       - name: Build Swift Package
