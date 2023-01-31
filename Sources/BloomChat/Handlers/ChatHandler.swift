@@ -26,6 +26,7 @@ class ChatHandler: Handler, TelegramProtocol {
         
         if let message = context.message, let text = message.text, let user = message.from {
             Task {
+                bot.sendChatActionSync(chatId: .chat(context.chatId!), action: .typing)
                 let previousSession = try await bloomChat.find(from: user)
                 let result = try await bloomChat.generateMessage(input: text, previous: previousSession)
                 try await bloomChat.save(from: user, prev: previousSession, userMessage: text, response: result)
