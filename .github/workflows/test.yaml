@@ -10,7 +10,7 @@ jobs:
   build-swift:
     strategy:
       matrix:
-        os: [self-hosted]
+        os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
