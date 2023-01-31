@@ -1,7 +1,8 @@
 import BSON
-import Foundation
 import MongoKitten
 import TelegramBotSDK
+import Alamofire
+import Foundation
 
 public class BloomChat {
     let collection: MongoCollection
@@ -23,16 +24,10 @@ public class BloomChat {
         let prompt = preparePromptForBot(previous: session?.history, userMessage: input)
         print("====\nPrompt: \(prompt)\n====")
         let body = ["inputs": prompt]
-        var request = URLRequest(url: URL(string: endpoint)!)
-        request.httpMethod = "POST"
-        request.setValue("Bearer \(key)", forHTTPHeaderField: "Authorization")
+        let headers: HTTPHeaders = [.authorization(bearerToken: key)]
+        let task = AF.request(endpoint ,method: .post, parameters: body,encoding: JSONEncoding.default ,headers: headers).serializingDecodable([BloomResponse].self)
+        let result = try await task.value
         
-        let encoder = JSONEncoder()
-        request.httpBody = try encoder.encode(body)
-        
-        let (data, _) = try await URLSession.shared.data(for: request)
-        let decoder = JSONDecoder()
-        let result = try decoder.decode([BloomResponse].self, from: data)
         print("====\nResult: \(result)\n====")
         let response = getBotResponse(from: result.first?.generated_text, userMessage: input)
         return response

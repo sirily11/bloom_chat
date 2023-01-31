@@ -19,7 +19,8 @@ let package = Package(
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
         .package(url: "https://github.com/zmeyc/telegram-bot-swift.git", from: "2.0.0"),
-        .package(url: "https://github.com/orlandos-nl/MongoKitten", from: "7.0.0")
+        .package(url: "https://github.com/orlandos-nl/MongoKitten", from: "7.0.0"),
+        .package(url: "https://github.com/Alamofire/Alamofire", from: "5.0.0")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -28,7 +29,8 @@ let package = Package(
             name: "BloomChat",
             dependencies: [
                 .product(name: "TelegramBotSDK", package: "telegram-bot-swift"),
-                .product(name: "MongoKitten", package: "MongoKitten")
+                .product(name: "MongoKitten", package: "MongoKitten"),
+                .product(name: "Alamofire", package: "Alamofire")
             ],
             resources: [.process("Resources")]
         ),
