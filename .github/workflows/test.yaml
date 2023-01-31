@@ -1,7 +1,5 @@
 name: Build and release plugin
 on:
-  release:
-    types: [published]
   push:
     branches:
       - main
