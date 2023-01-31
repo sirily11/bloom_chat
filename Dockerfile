@@ -10,12 +10,17 @@ RUN export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true \
 
 
 WORKDIR /app/
-COPY . .
+
+
+COPY Package.swift /app/
+COPY Sources /app/Sources
+COPY Tests /app/Tests
 
 RUN swift build -c release --static-swift-stdlib
+
 WORKDIR /build
 RUN cp /app/.build/release/BloomChat .
-RUN cp /app/.build/release/*.Bundle .
+RUN cp -r /app/.build/release/BloomChat_BloomChat.resources .
 
 FROM ubuntu:22.10 as run
 
@@ -31,7 +36,7 @@ RUN export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true && ap
 
 
 COPY --from=build /build/BloomChat /app
-COPY --from=build /build/*.Bundle /app
+COPY --from=build /build/BloomChat_BloomChat.resources /app/BloomChat_BloomChat.resources
 
 ENTRYPOINT [ "./BloomChat" ]
-CMD ["./BloomChat"]
+CMD []
