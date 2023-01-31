@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  server:
+    image: ghcr.io/sirily11/bloom_chat:v1.0.2
+    container_name: bloom_chat
+    restart: always
+    environment:
+      - API_KEY=${API_KEY}
+      - MODEL_KEY=${MODEL_KEY}
+      - MODEL_URL=${MODEL_URL}
+      - DB_URL=${DB_URL}

@@ -15,6 +15,7 @@ COPY . .
 RUN swift build -c release --static-swift-stdlib
 WORKDIR /build
 RUN cp /app/.build/release/BloomChat .
+RUN cp /app/.build/release/*.Bundle .
 
 FROM ubuntu:22.10 as run
 
@@ -30,7 +31,7 @@ RUN export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true && ap
 
 
 COPY --from=build /build/BloomChat /app
+COPY --from=build /build/*.Bundle /app
 
-EXPOSE 8080
 ENTRYPOINT [ "./BloomChat" ]
 CMD ["./BloomChat"]
