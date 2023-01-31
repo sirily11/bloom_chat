@@ -27,7 +27,7 @@ jobs:
           context: ./
           platforms: linux/amd64
           push: false
-          tags: ghcr.io/${{ github.repository }}:pr-${{ github.event.number }}
+          tags: ghcr.io/${{ github.repository }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
